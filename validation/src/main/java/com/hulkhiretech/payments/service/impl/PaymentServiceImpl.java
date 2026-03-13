@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.hulkhiretech.payments.constant.ValidationRuleEnum;
 import com.hulkhiretech.payments.pojo.PaymentRequest;
+import com.hulkhiretech.payments.service.HmacSha256Service;
 import com.hulkhiretech.payments.service.interfaces.BusinessValidator;
 import com.hulkhiretech.payments.service.interfaces.PaymentService;
 
@@ -24,11 +25,17 @@ public class PaymentServiceImpl implements PaymentService {
 
 	private final ApplicationContext applicationContext;
 
+	private final HmacSha256Service hmacSha256Service;
+
 	@Override
-	public String validateAndCreatePayment(PaymentRequest paymentRequest) {
+	public String validateAndCreatePayment(PaymentRequest paymentRequest, String hmacSignature) {
 
 		log.info("Validation rule name Recevied : {}", validationRuleName);
-		log.info("Validating payment request: {}", paymentRequest);
+		log.info("Received payment request: {}", paymentRequest);
+		log.info("hamcsha256 for payment request: {}, {}", paymentRequest, hmacSignature);
+
+		String computeSignature = hmacSha256Service.isHmacShaValid(paymentRequest, hmacSignature);
+
 		String[] rule = validationRuleName.split(",");
 
 		for (String r : rule) {
@@ -39,6 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
 				log.warn("No validator found for rule: {}", r);
 				continue; // or handle as needed
 			}
+
 			BusinessValidator businessValidator = applicationContext.getBean(validatorClassOpt.get());
 
 			if (businessValidator == null) {
