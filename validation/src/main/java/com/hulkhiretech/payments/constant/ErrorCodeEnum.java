@@ -59,7 +59,9 @@ public enum ErrorCodeEnum {
 	GENERIC_SERVER_ERROR("10051", "Internal Server Error"),
 
 	FAILED_TO_SAVE_PAYMENT_REQUEST("10052", "Failed to save payment request"),
-	DUPLICATE_TRANSACTION("10053", "Duplicate transaction detected");
+	DUPLICATE_TRANSACTION("10053", "Duplicate transaction detected"),
+	INVALID_HMAC_SIGNATURE("10054", "Invalid Hmac Signature"),
+	MISSING_HMAC_SIGNATURE("10055", "Missing Hmac Signature");
 
 	private final String code;
 	private final String message;

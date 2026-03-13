@@ -6,6 +6,6 @@ import jakarta.validation.Valid;
 
 public interface PaymentService {
 
-	String validateAndCreatePayment(@Valid PaymentRequest paymentRequest);
+	String validateAndCreatePayment(@Valid PaymentRequest paymentRequest, String hmacSignature);
 
 }

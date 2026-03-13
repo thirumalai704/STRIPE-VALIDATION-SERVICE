@@ -2,6 +2,7 @@ package com.hulkhiretech.payments.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +22,11 @@ public class PaymentController {
 	private final PaymentService paymentService;
 
 	@PostMapping
-	public String validatePayment(@Valid @RequestBody PaymentRequest paymentRequest) {
-		String serviceResponse = paymentService.validateAndCreatePayment(paymentRequest);
+	public String validatePayment(@Valid @RequestBody PaymentRequest paymentRequest,
+			@RequestHeader(value = "Hmac-Signature", required = false) String hmacSignature) {
+
+		log.info("Received payment request with HMAC signature: {}", hmacSignature);
+		String serviceResponse = paymentService.validateAndCreatePayment(paymentRequest, hmacSignature);
 		log.info("Received payment request: {}", paymentRequest);
 		return serviceResponse;
 	}
